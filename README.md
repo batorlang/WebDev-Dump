@@ -8,14 +8,14 @@ This course focuses on the core pillars of frontend web development, and all pro
 * **CSS** – Styling, layouts, and responsive design
 * **JavaScript** – Adding interactivity and logic
 
-* ## 🎯 Course Objectives & Learning Outcomes
+## 🎯 Course Objectives & Learning Outcomes
 Throughout the exercises contained in this repository, I am actively building the skills to:
 * **Understand the Fundamentals:** Explain the basic terms, architecture, and core concepts of web software development.
 * **Build Frontend Applications:** Independently create functional and interactive web applications from scratch using HTML, CSS, and JS.
 * **Design for Everyone:** Recognize and apply best practices for web usability and accessibility, ensuring applications can be used by all audiences.
 * **Integrate Data:** Successfully connect to and utilize external APIs to fetch dynamic data and enrich web applications.
 
-* ## 📁 Repository Structure
+## 📁 Repository Structure
 *(Feel free to adjust these folders as the semester progresses!)*
 * 📂 `Week-01/` - Basic HTML and structural elements
 * 📂 `Week-02/` - TBA
