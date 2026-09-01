@@ -16,7 +16,6 @@ Throughout the exercises contained in this repository, I am actively building th
 * **Integrate Data:** Successfully connect to and utilize external APIs to fetch dynamic data and enrich web applications.
 
 ## 📁 Repository Structure
-*(Feel free to adjust these folders as the semester progresses!)*
 * 📂 `Week-01/` - Basic HTML and structural elements
 * 📂 `Week-02/` - TBA
 * 📂 `Week-03/` - TBA
