@@ -49,7 +49,7 @@ function tablePopulation(data) {
 
 tablePopulation(userData);
 
-const addButton = document.getElementById('addButton');
+const addButton = document.getElementById('submit-data');
 
 
 const clearButton = document.getElementById('empty-table');
