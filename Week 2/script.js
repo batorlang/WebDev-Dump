@@ -65,9 +65,9 @@ addButton.addEventListener('click', function(event){
 
     event.preventDefault();
 
-    const newUsername = document.getElementById('usernameInput').value;
-    const newEmail = document.getElementById('emailInput').value;
-    const newIsAdmin = document.getElementById('adminInput').checked;
+    const newUsername = document.getElementById('input-username').value;
+    const newEmail = document.getElementById('input-email').value;
+    const newIsAdmin = document.getElementById('input-admin').checked;
 
     const imageInput = document.getElementById('input-image');
     let newImageURL = null;
@@ -98,8 +98,8 @@ addButton.addEventListener('click', function(event){
         userData.push(newUser);
     }
     tablePopulation(userData);
-    document.getElementById('usernameInput').value = '';
-    document.getElementById('emailInput').value = '';
-    document.getElementById('adminInput').checked = false;
+    document.getElementById('input-username').value = '';
+    document.getElementById('input-email').value = '';
+    document.getElementById('input-admin').checked = false;
     document.getElementById('input-image').value = '';
 });
