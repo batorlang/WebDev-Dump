@@ -73,7 +73,7 @@ addButton.addEventListener('click', function(event){
 
 
     let newImageURL = null;
-    if (imageInput.files.lenght > 0) {
+    if (imageInput.files.length > 0) {
         newImageURL = URL.createObjectURL(imageInput.files[0]);
     }
 
