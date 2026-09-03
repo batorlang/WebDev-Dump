@@ -70,8 +70,12 @@ addButton.addEventListener('click', function(event){
     const newIsAdmin = document.getElementById('input-admin').checked;
 
     const imageInput = document.getElementById('input-image');
+
+
     let newImageURL = null;
-    newImageURL = URL.createObjectURL(imageInput.files[0]);
+    if (imageInput.files.lenght > 0) {
+        newImageURL = URL.createObjectURL(imageInput.files[0]);
+    }
 
 
 
@@ -82,7 +86,7 @@ addButton.addEventListener('click', function(event){
             userData[i].email = newEmail;
             userData[i].isAdmin = newIsAdmin;
             if (newImageURL !== null) {
-                userData[i].image = newImageUrl;
+                userData[i].image = newImageURL;
             }
             userExists = true;
             break;
