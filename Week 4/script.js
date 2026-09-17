@@ -43,7 +43,5 @@ async function fetchData() {
 
 };
 
-
-
 //Give the button the functionality to fetch data and append the show data into the "list"
 submitButton.addEventListener("click", fetchData);
