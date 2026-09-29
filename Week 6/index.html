@@ -5,11 +5,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Week 6</title>
         <link rel="stylesheet" href="style.css">
+        <script src="https://unpkg.com/frappe-charts@latest/dist/frappe-charts.min.umd.js"></script>
     </head>
     <body>
 
-        
-
+        <div id="chart"></div>
+        <form id="data-form">
+            <input type="text" id="input-area" placeholder="Enter a municipality code">
+            <button id="submit-data">Submit</button>
+            <button id="add-data" type="button">Add Prediction</button>
+        </form>
         <script src="script.js" defer></script>
     </body>
 </html>
