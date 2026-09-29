@@ -48,7 +48,19 @@ async function fetchData(){ //Simple fetch of geoJson
     const migrationLookup = await fetchMigData();
 
     const geoJsonLayer = L.geoJSON(geoResponse, {
-        weight: 2,
+        style: (feature) => {
+            const migration = migrationLookup[feature.properties.kunta];
+            //Here I have made a normal fallback for a no migration data case
+            if (!migration) return {weight: 2};
+            const hue = Math.min(
+                (migration.positive / migration.negative) ** 3 * 60,
+                120
+            );
+            return {
+                weight: 2,
+                color: `hsl(${hue}, 75%, 50%)`
+            };
+        },
         onEachFeature: (feature, layer) => {
             const name = feature.properties.name;
             layer.bindTooltip(name);
