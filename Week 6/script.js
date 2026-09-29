@@ -156,6 +156,9 @@ addButton.addEventListener("click", () => {
     chart.addDataPoint(nextLabel, [pred]);
     labels.push(nextLabel);
     data.push(pred);
+
+    localStorage.setItem("selectedAreaCode", areaCodes[areaIndex]);
+    localStorage.setItem("selectedAreaName", areaNames[areaIndex]);
 });
 
 //Function thatr runs areaMapping and the buildChart functions.
@@ -163,5 +166,7 @@ const initializer = async () => {
     await fetchAreaMap();
     await buildChart();
 };
+
+
 
 initializer();
