@@ -11,33 +11,37 @@ let osm = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 }).addTo(map);
 
 async function fetchMigData(){
-    //fetch the query
     const queryResponse = await fetch("migration_data_query.json");
     const query = await queryResponse.json();
 
     const res = await fetch(migrationUrl, {
         method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(query)
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(query)
     });
 
     const migrationJson = await res.json();
 
-    const migrationLookup = {}; //Initialize it empty
+    // Municipality codes, in the same order they appear in the flat value list
+    const alueIndex = migrationJson.dimension.alue_23_20260101.category.index;
+    const alueCodes = [];
+    Object.entries(alueIndex).forEach(([code, pos]) => { alueCodes[pos] = code; }); //I have used help for this part
 
-    migrationJson.data.forEach((row) => { //I rewrote the json-stat2 into json in the migration data query.
-        const areaCode = row.key[0];
-        if (areaCode === "SSS") return; //Do not need the country total data
+    const values = migrationJson.value;
 
-        const muniCode = areaCode.replace("KU", ""); //Need to cut the KU off of the codes
+    const migrationLookup = {};
+
+    alueCodes.forEach((areaCode, i) => {
+        if (areaCode === "SSS") return;
+
+        const muniCode = areaCode.replace("KU", "");
 
         migrationLookup[muniCode] = {
-            positive: row.values[0],
-            negative: row.values[1]
+            positive: values[i * 2],
+            negative: values[i * 2 + 1]
         };
     });
+
     return migrationLookup;
 };
 

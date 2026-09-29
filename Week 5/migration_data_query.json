@@ -356,6 +356,6 @@
     }
   ],
   "response": {
-    "format": "json"
+    "format": "json-stat2"
   }
 }
