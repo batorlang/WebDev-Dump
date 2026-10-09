@@ -7,7 +7,7 @@ const years = [
 
 
 const selectedAreaCode = localStorage.getItem("selectedAreaCode") || "SSS";
-const selectedAreaName = localStorage.getItem("selectedAreaName") || "Finaland";
+const selectedAreaName = localStorage.getItem("selectedAreaName") || "Finland";
 
 const createRequestBody = (contentsCode) => ({
     query: [

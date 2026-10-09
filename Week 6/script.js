@@ -122,14 +122,16 @@ const fetchAreaMap = async () => { //Simple GET to collect area codes and names 
 const submitButton = document.getElementById("submit-data");
 submitButton.addEventListener("click", async (event) =>{
     event.preventDefault();
-    const serachInput = document.getElementById("input-area").value.toLowerCase();
-    const areaIndex = areaNames.findIndex(name => name.toLowerCase() === serachInput);
+    const searchInput = document.getElementById("input-area").value.toLowerCase();
+    const areaIndex = areaNames.findIndex(name => name.toLowerCase() === searchInput);
 
     if (areaIndex === -1) {
         return; //This means an error
     }
 
     requestBody.query[1].selection.values = [areaCodes[areaIndex]];
+    localStorage.setItem("selectedAreaCode", areaCodes[areaIndex]);
+    localStorage.setItem("selectedAreaName", areaNames[areaIndex]);
     await buildChart(areaNames[areaIndex]);
 });
 
@@ -156,9 +158,6 @@ addButton.addEventListener("click", () => {
     chart.addDataPoint(nextLabel, [pred]);
     labels.push(nextLabel);
     data.push(pred);
-
-    localStorage.setItem("selectedAreaCode", areaCodes[areaIndex]);
-    localStorage.setItem("selectedAreaName", areaNames[areaIndex]);
 });
 
 //Function thatr runs areaMapping and the buildChart functions.
