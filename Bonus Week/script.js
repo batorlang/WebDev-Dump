@@ -16,23 +16,22 @@ const gameOptions = {
 
 }
 
-window.onload = function() {
-    let gameConfig = {
+window.onload = function () {
+    const gameConfig = {
         type: Phaser.AUTO,
         backgroundColor: "#000099",
+        parent: "game",
         scale: {
             mode: Phaser.Scale.FIT,
             autoCenter: Phaser.Scale.CENTER_BOTH,
-            width: 800,
-            height: 1000,
+            width: 1280,
+            height: 720
         },
         pixelArt: true,
         physics: {
             default: "arcade",
             arcade: {
-                gravity: {
-                    y: 0
-                }
+                gravity: { y: 0 }
             }
         },
         scene: PlayGame
@@ -106,11 +105,11 @@ class PlayGame extends Phaser.Scene {
         this.keys = this.input.keyboard.addKeys("W,A,S,D");
         
         //UI
-        /*this.livesText = this.add.text(20, 15, "", {
+        this.livesText = this.add.text(20, 15, "", {
             fontFamily: "monospace", fontSize: "28px", color: "#ffffff"
         }).setDepth(10);
         this.updateUI();
-        this.spawnWave();*/
+        this.spawnWave();
     }
 
     update() {
@@ -135,12 +134,95 @@ class PlayGame extends Phaser.Scene {
         });
 
         //laser cleanup
+
     }
 
     //waves
+    spawnWave() {
+        this.wave++;
+        const count = gameOptions.enemyCounter1 + this.wave -1;
+        for (let i = 0; i < count; i++) {
+            const y = 720 * (i + 1) / (count + 1);
+            const e = this.enemies.create(1180 + Phaser.Math.Between(0, 60), y, "enemy");
+            e.setDisplaySize(90, 120);
+            e.setData("hp", gameOptions.enemyHP);
+        }
+    }
 
-    
+
     //playerShooting
+    playerShoot() {
+        if (this.isOver) return;
+        const l = this.playerLaser.create(this.player.x + 45, this.player.y, "playerLaser");
+        l.setVelocityX(gameOptions.playerLaserSpeed);
+    }
 
     //enemnyShooting
+    enemyShoot() {
+        if (this.isOver) return;
+        this.enemies.getChildren().forEach(e => {
+            const l = this.enemyLasers.create(e.x - 50, e.y, "enemyLaser");
+            const angle = Phaser.Math.Angle.Between(l.x, l.y, this.player.x, this.player.y);
+            l.setRotation(angle);
+            this.physics.velocityFromRotation(angle, gameOptions.enemyLaserSpeed, l.body.velocity);
+        });
+    }
+
+    //hitEnemy
+    hitEnemy(laser, enemy) {
+        laser.destroy();
+        const hp = enemy.getData("hp") - 1;
+        enemy.setData("hp", hp);
+        enemy.setTint(0xff0000);
+        this.time.delayedCall(80, () => { if (enemy.active) enemy.clearTint(); });
+
+        if (hp <= 0) {
+            enemy.destroy();
+            if (this.enemies.countActive() === 0) {
+                this.time.delayedCall(1000, () => { if (!this.isOver) this.spawnWave(); });
+            }
+        }
+    }
+
+    //hitPlayer
+    hitPlayer(player, other) {
+        //on hit, the lasers disappear
+        if (other.texture.key === "enemyLaser") other.destroy();
+        if (this.invulnerable) return;
+        this.lives--;
+        this.updateUI();
+        if (this.lives <= 0) {
+            this.endGame();
+            return;
+        }
+        this.invulnerable = true;
+        this.tweens.add({
+            targets: this.player,
+            alpha: 0.3,
+            duration: 100,
+            yoyo: true,
+            repeat: 7,
+            onComplete: () => {
+                this.player.setAlpha(1);
+                this.invulnerable = false;
+            }
+        });
+    }
+
+
+   
+
+    //updateUI
+    updateUI() {
+        this.livesText.setText("Lives: " + this.lives);
+    }
+
+    //endGame
+    endGame() {
+        this.isOver = true;
+        this.physics.pause();
+        this.add.text(640, 320, "GAME OVER", {
+            fontFamily: "monospace", fontSize: "64px", color: "#ff5555"
+        }).setOrigin(0.5).setDepth(10);
+    }
 }
