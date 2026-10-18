@@ -8,10 +8,10 @@ const gameOptions = {
     playerHP: 3,
 
     //Enemy config
-    enemyHP: 3,
-    enemySpeed: 50,
-    enemyFireDelay: 1500,
-    enemyLaserSpeed: 220,
+    enemyHP: 5,
+    enemySpeed: 100,
+    enemyFireDelay: 1000,
+    enemyLaserSpeed: 400,
     enemyCounter1: 2 //This is the first wave of the game
 
 }
@@ -20,7 +20,7 @@ window.onload = function () {
     const gameConfig = {
         type: Phaser.AUTO,
         backgroundColor: "#000099",
-        parent: "game",
+        parent: "canvas",
         scale: {
             mode: Phaser.Scale.FIT,
             autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -59,7 +59,7 @@ class PlayGame extends Phaser.Scene {
         this.invulnerable = false;
         this.isOver = false;
 
-        //Player and Enemy lasters
+        //Player and Enemy lasers
         const g = this.make.graphics({ x:0, y:0, add: false});
         g.fillStyle(0x00ffff).fillRect(0, 0, 28, 6);
         g.generateTexture("playerLaser", 28, 6);
@@ -78,12 +78,12 @@ class PlayGame extends Phaser.Scene {
         this.player = this.physics.add.image(120, 360, "player");
         this.player.setDisplaySize(80, 80);
         this.player.body.setCircle(150, 100, 100); //This is the hitbox of the player
-        this.player.setCollideWorldBounds(true);
+        this.player.setCollideWorldBounds(true); //Stopping the cat from leaving the playing area
 
-        //collisions (hit functions must be declared)
-        this.physics.add.overlap(this.playerLaser, this.enemies, this.hitEnemy, null, this);
-        this.physics.add.overlap(this.player, this.enemyLaser, this.hitPlayer, null, this);
-        this.physics.add.overlap(this.player, this.enemies, this.hitPlayer, null, this);
+        //collisions
+        this.physics.add.overlap(this.playerLaser, this.enemies, this.hitEnemy, null, this); //player hits enemy
+        this.physics.add.overlap(this.player, this.enemyLaser, this.hitPlayer, null, this); //enemy hits player
+        this.physics.add.overlap(this.player, this.enemies, this.hitPlayer, null, this); //player moves into enemy hitbox
 
         //player constant shooting
         this.time.addEvent({
@@ -117,12 +117,11 @@ class PlayGame extends Phaser.Scene {
         if (this.isOver) return;
 
         //movement (WASD)
-        let vx =0, vy = 0;
+        let vx =0, vy =0;
         if (this.keys.W.isDown) vy -= 1;
         if (this.keys.A.isDown) vx -= 1;
         if (this.keys.S.isDown) vy += 1;
         if (this.keys.D.isDown) vx += 1;
-
         const vector = new Phaser.Math.Vector2(vx, vy);
         if (vector.lengthSq() > 0) vector.normalize().scale(gameOptions.playerSpeed);
         this.player.setVelocity(vector.x, vector.y);
@@ -130,10 +129,10 @@ class PlayGame extends Phaser.Scene {
 
         //enemy moves slowly towards the player
         this.enemies.getChildren().forEach(e => {
-            this.physics.moveToObject(e, this.player, gameOptions.enemySpead);
+            this.physics.moveToObject(e, this.player, gameOptions.enemySpeed);
         });
 
-        //laser cleanup could be implemented still
+        //Laser destruction is not implemented due to the lack of time.
 
     }
 
@@ -171,7 +170,7 @@ class PlayGame extends Phaser.Scene {
 
     //hitEnemy
     hitEnemy(laser, enemy) {
-        laser.destroy();
+        laser.destroy(); //laser gets destoryed when enemy hit
         const hp = enemy.getData("hp") - 1;
         enemy.setData("hp", hp);
         enemy.setTint(0xff0000);
@@ -199,12 +198,12 @@ class PlayGame extends Phaser.Scene {
         this.invulnerable = true;
         this.tweens.add({
             targets: this.player,
-            alpha: 0.3,
+            alpha: 0.4,
             duration: 100,
-            yoyo: true,
+            yoyo: true, //need this to get the repeated effect
             repeat: 7,
             onComplete: () => {
-                this.player.setAlpha(1);
+                this.player.setAlpha(1); //bugfix: sometimes the cat stayed transparent, so after the effect is done the alpha is set back to 1
                 this.invulnerable = false;
             }
         });
@@ -227,7 +226,7 @@ class PlayGame extends Phaser.Scene {
         this.add.text(640, 320, "GAME OVER", {
             fontFamily: "monospace", fontSize: "64px", color: "#ff5555"
         }).setOrigin(0.5).setDepth(10);
-        this.add.text(640, 400, "You reached wave: " + this.wave, {
+        this.add.text(640, 400, "You reached wave " + this.wave, {
             fontFamily: "monospace", fontSize: "64px", color: "#ff5555"
         }).setOrigin(0.5).setDepth(10);
         const blinking = this.add.text(640, 490, "Press F5 to restart", {

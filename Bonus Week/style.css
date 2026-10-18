@@ -1,5 +1,11 @@
-body {
-    background-color: #000000;
+html, body {
     margin: 0;
     padding: 0;
+    height: 100%;
+    background-color: #000099;
+    overflow: hidden;
+}
+
+canvas {
+    display: block;
 }
