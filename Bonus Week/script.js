@@ -222,11 +222,23 @@ class PlayGame extends Phaser.Scene {
     endGame() {
         this.isOver = true;
         this.physics.pause();
+
+        this.add.rectangle(640, 390, 760, 360, 0x000000, 0.8).setStrokeStyle(4, 0xffffff).setDepth(9);
         this.add.text(640, 320, "GAME OVER", {
             fontFamily: "monospace", fontSize: "64px", color: "#ff5555"
         }).setOrigin(0.5).setDepth(10);
-        this.add.text(640, 400, "You have reached wave: " + this.wave, {
+        this.add.text(640, 400, "You reached wave: " + this.wave, {
             fontFamily: "monospace", fontSize: "64px", color: "#ff5555"
         }).setOrigin(0.5).setDepth(10);
+        const blinking = this.add.text(640, 490, "Press F5 to restart", {
+            fontFamily: "monospace", fontSize: "64px", color: "#ff5555"
+        }).setOrigin(0.5).setDepth(10);
+        this.tweens.add({
+            targets: blinking,
+            alpha: 0,
+            duration: 500,
+            yoyo: true,
+            repeat: -1
+        });
     }
 }
