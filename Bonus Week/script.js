@@ -54,7 +54,7 @@ class PlayGame extends Phaser.Scene {
 
     create() {
         this.physics.resume();
-        this.lives = gameOptions.lives;
+        this.lives = gameOptions.playerHP;
         this.wave = 0;
         this.invulnerable = false;
         this.isOver = false;
@@ -101,7 +101,7 @@ class PlayGame extends Phaser.Scene {
             callbackScope: this
         });
 
-        //input handling
+        //input
         this.keys = this.input.keyboard.addKeys("W,A,S,D");
         
         //UI
@@ -133,13 +133,14 @@ class PlayGame extends Phaser.Scene {
             this.physics.moveToObject(e, this.player, gameOptions.enemySpead);
         });
 
-        //laser cleanup
+        //laser cleanup could be implemented still
 
     }
 
     //waves
     spawnWave() {
         this.wave++;
+        this.updateUI();
         const count = gameOptions.enemyCounter1 + this.wave -1;
         for (let i = 0; i < count; i++) {
             const y = 720 * (i + 1) / (count + 1);
@@ -157,11 +158,11 @@ class PlayGame extends Phaser.Scene {
         l.setVelocityX(gameOptions.playerLaserSpeed);
     }
 
-    //enemnyShooting
+    //enemnyShootingdw
     enemyShoot() {
         if (this.isOver) return;
         this.enemies.getChildren().forEach(e => {
-            const l = this.enemyLasers.create(e.x - 50, e.y, "enemyLaser");
+            const l = this.enemyLaser.create(e.x - 50, e.y, "enemyLaser");
             const angle = Phaser.Math.Angle.Between(l.x, l.y, this.player.x, this.player.y);
             l.setRotation(angle);
             this.physics.velocityFromRotation(angle, gameOptions.enemyLaserSpeed, l.body.velocity);
@@ -214,7 +215,7 @@ class PlayGame extends Phaser.Scene {
 
     //updateUI
     updateUI() {
-        this.livesText.setText("Lives: " + this.lives);
+        this.livesText.setText("Lives: " + this.lives + "   Wave: " + this.wave);
     }
 
     //endGame
@@ -222,6 +223,9 @@ class PlayGame extends Phaser.Scene {
         this.isOver = true;
         this.physics.pause();
         this.add.text(640, 320, "GAME OVER", {
+            fontFamily: "monospace", fontSize: "64px", color: "#ff5555"
+        }).setOrigin(0.5).setDepth(10);
+        this.add.text(640, 400, "You have reached wave: " + this.wave, {
             fontFamily: "monospace", fontSize: "64px", color: "#ff5555"
         }).setOrigin(0.5).setDepth(10);
     }
