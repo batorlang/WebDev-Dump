@@ -1,3 +1,14 @@
+/*This game is quite similar than the Gravity Vortex game in Five Nights at Freedys Pizzeria Simulator.
+The concept is that the player can move around the game area and shoots in a constant rate to the right side.
+On the right side, the enemy spawns in waves, moves and shoots slower, but towards the players current position.
+The goal is to survive and defeat waves, as each wave promises more and more enemies.
+
+Configuration of the game is pretty simple, as everything can be set in the @gameOptions
+The assets are simple png, files with a slight touch of gimp editing on them.
+
+I have used Claude to help out in generating and drawing the lasers.
+*/
+
 let game;
 
 const gameOptions = {
